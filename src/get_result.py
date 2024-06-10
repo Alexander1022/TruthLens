@@ -1,5 +1,4 @@
 import joblib
-import re
 from process_string import lematize
 
 class Classifier:
@@ -22,7 +21,6 @@ class Classifier:
 
 if __name__ == '__main__':
     classifier = Classifier()
-    print(classifier.classify_sentence_with_proba("Михаела Филева се раздели с приятеля си"))
-
-    predicted_class, predicted_proba = classifier.classify_sentence_with_proba("Ще има избори в България през 2025 година")
-    print(f"Predicted class: {predicted_class}, Probability: {predicted_proba}")
+    TEST_SENTENCE = "Ще има избори в България през 2025 година"
+    res_class, res_proba = classifier.classify_sentence_with_proba(TEST_SENTENCE)
+    print(f"Predicted class: {res_class}, Probability: {res_proba}")

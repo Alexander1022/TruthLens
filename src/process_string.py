@@ -11,7 +11,7 @@ def clean_data(data):
     data = data.lower()
     data = re.sub('[^а-яА-ЯёЁ]', ' ', data)
     token = data.split()
-    stop_words = load_stopwords('../data/bulgarian_stopwords.txt')    
+    stop_words = load_stopwords('../data/bulgarian_stopwords.txt')
     news = [word for word in token if not word in set(stop_words)]
 
     return ' '.join(news)

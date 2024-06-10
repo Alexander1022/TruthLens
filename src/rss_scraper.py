@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-urls = ['https://www.focus-news.net/rss.php', 
+urls = ['https://www.focus-news.net/rss.php',
 'https://www.dnes.bg/rss.php?today', 
 'https://www.dnes.bg/rss.php?cat=1', 
 'https://www.dnes.bg/rss.php?cat=142', 
@@ -29,7 +29,7 @@ urls = ['https://www.focus-news.net/rss.php',
 
 output = []
 for feed in urls:
-    resp = requests.get(feed)
+    resp = requests.get(feed, timeout=20)
     soup = BeautifulSoup(resp.content, features='xml')
     for entry in soup.find_all('item'):
         title = entry.find('title').text
