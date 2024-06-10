@@ -2,11 +2,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
+from imblearn.under_sampling import RandomUnderSampler
 import pandas as pd
 import numpy as np
 import re
 from process_string import lematize
 import joblib
+
+CSV_DIRECTORY = '../data/raw/'
+DATAFILE = 'news.csv'
+FILEPATH = CSV_DIRECTORY + DATAFILE
 
 def check_class_distribution(filename):
     news = pd.read_csv(filename)
@@ -14,7 +19,7 @@ def check_class_distribution(filename):
     print(class_distribution)
 
 def train(filename):
-    news = pd.read_csv(filename)
+    news = pd.read_csv(FILEPATH)
     dataset = news.sample(frac=1)
 
     dataset['news_title'] = dataset['news_title'].apply(lambda x : lematize(x))
@@ -31,28 +36,24 @@ def train(filename):
     vec_train_data = vec_train_data.toarray()
     vec_test_data = vectorizer.transform(test_data).toarray()
 
-    '''
-        oversampler = RandomOverSampler(random_state=0)
-        vec_train_data, train_label = oversampler.fit_resample(vec_train_data, train_label)
-    '''
+    oversampler = RandomUnderSampler(sampling_strategy=1)
+    vec_train_data, train_label = oversampler.fit_resample(vec_train_data, train_label)
 
     training_data = pd.DataFrame(vec_train_data , columns=vectorizer.get_feature_names_out())
     testing_data = pd.DataFrame(vec_test_data , columns= vectorizer.get_feature_names_out())
     
-    clf = LogisticRegression(max_iter=1000)
+    clf = LogisticRegression(max_iter=1000, verbose=2)
     clf.fit(training_data, train_label)
     y_pred = clf.predict(testing_data)
 
     print(classification_report(test_label , y_pred))
     
-    joblib.dump(clf, 'model.pkl')
-    joblib.dump(vectorizer, 'vectorizer.pkl')
+    joblib.dump(clf, '../data/model.pkl')
+    joblib.dump(vectorizer, '../data/vectorizer.pkl')
     
     return accuracy_score(test_label, y_pred)
 
+check_class_distribution(FILEPATH)
+accuracy = train(FILEPATH)
 
-filename = 'news.csv'
-check_class_distribution(filename)
-
-accuracy = train(filename)
 print(accuracy)
