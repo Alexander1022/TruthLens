@@ -1,1 +1,1 @@
-web: gunicorn main:app --chdir api --reload
+web: gunicorn -k uvicorn.workers.UvicornWorker main:app --chdir api --reload
