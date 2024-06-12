@@ -13,3 +13,4 @@ scipy
 spacy
 typer
 gunicorn
+uvicorn
