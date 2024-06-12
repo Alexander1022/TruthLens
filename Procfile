@@ -1,1 +1,1 @@
-web: gunicorn main:app --port 5000 --host 127.0.0.1 --chdir api --reload
+web: gunicorn main:app --chdir api --reload
