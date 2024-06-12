@@ -10,14 +10,20 @@ class Classifier:
         processed_sentence = lematize(sentence)
         return processed_sentence
 
+    def simple_classifier(self, n):
+        if n == 0:
+            return "F"
+
+        return "T"
+
     def classify_sentence_with_proba(self, sentence):
         processed_sentence = self.preprocess_sentence(sentence)
         vec_sentence = self.vectorizer.transform([processed_sentence]).toarray()
 
         predicted_class = self.clf.predict(vec_sentence)[0]
-        predicted_proba = self.clf.predict_proba(vec_sentence)[0]
+        predicted_proba = self.clf.predict_proba(vec_sentence)[0].tolist()
 
-        return predicted_class, predicted_proba
+        return predicted_class, predicted_proba, self.simple_classifier(predicted_class)
 
 if __name__ == '__main__':
     classifier = Classifier()
